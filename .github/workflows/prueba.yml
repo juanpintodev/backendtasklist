@@ -1,0 +1,14 @@
+name: Prueba!!!
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  prueba_tasklist:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Correcto
+        run: |
+          echo "Ready"
