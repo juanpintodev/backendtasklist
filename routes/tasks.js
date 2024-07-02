@@ -1,4 +1,6 @@
+const { query } = require("express");
 const db = require("../db");
+const { response } = require("../app");
 const TASK_REGEX = /^(?=.*[a-zA-Z0-9]).{1,}$/;
 const tasksRouter = require("express").Router();
 
@@ -86,6 +88,23 @@ tasksRouter.delete("/:id", async (req, res) => {
     return res
       .status(200)
       .json({ message: "la tarea se ha eliminado correctamente" });
+  } catch (error) {
+    console.log("ERROR", error.code);
+    return res.status(500).json({ error: "Hubo un error" });
+  }
+});
+
+tasksRouter.get("/", async (req, res) => {
+  try {
+    const statement = db.prepare(`
+    SELECT * FROM tasks WHERE user_id = ?
+    `);
+
+    //aqui van las variables
+    const Tasks = statement.all(Number(req.query.userId));
+
+    // 4. Enviar la respuesta
+    return res.status(200).json(Tasks);
   } catch (error) {
     console.log("ERROR", error.code);
     return res.status(500).json({ error: "Hubo un error" });
